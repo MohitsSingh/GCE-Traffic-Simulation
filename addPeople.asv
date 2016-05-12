@@ -5,7 +5,7 @@ global traffic;
 for i = 1:length(path)-1
     ind = findedge(G, path(i), path(i+1));
 %     G.Edges.Weight(ind) = G.Edges.Weight(ind) * num_people;
-    traffic(ind) = traffic(ind) + num_people;
+    traffic(
 end
 
 end
