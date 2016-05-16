@@ -4,24 +4,60 @@ adj_mat(isnan(adj_mat)) = 0;
 
 rooms = [17, 18, 35, 36, 38, 39];
 
-global traffic;
-traffic = zeros(numedges(G), factorial(length(rooms));
-
 G = graph(adj_mat, labels);
+
+global traffic;
+traffic = zeros(numedges(G), 1);
+
 % p = plot(G, 'EdgeLabel', G.Edges.Weight, 'LineWidth', 3*G.Edges.Weight);
 
+combinations = nchoosek(rooms, 3);
+% seed = combinations(1:length(rooms)-1, :);
+
+% clear all_routes;
+
+% for i = 1:length(rooms)-1
+%     if(exist('all_routes', 'var'))
+%         next = combinations(1:length(rooms)-1, :);
+%         all_routes = repelem(all_routes, size(next, 1), 1);
+%         all_routes = [all_routes repmat(next, size(all_routes, 1)/size(next, 1), 1)];
+%         rooms(1) = [];
+%         combinations = nchoosek(rooms, 2);
+%     else
+%         all_routes = combinations(1:length(rooms)-1, :);
+%         rooms(1) = [];
+%         combinations = nchoosek(rooms, 2);
+%     end
+% end
+
+scores = zeros(size(combinations, 1), 1);
+
+for i = 1:size(combinations, 1)
+    paths = combinations(i, :);
+    
+    new_graph = G;
+    
+    new_graph = addPeople(new_graph, paths(1), paths(2), 10);
+    new_graph = addPeople(new_graph, paths(2), paths(3), 10);
+    new_graph = addPeople(new_graph, paths(3), paths(1), 10);
+    
+    new_graph.Edges.Weight = new_graph.Edges.Weight .* traffic;
+    
+%     W = new_graph.Edges.Weight( new_graph.Edges.Weight > 3 );
+
+    score = sum(new_graph.Edges.Weight);
+    scores(i) = score;
+    
+    % reset traffic
+    traffic = zeros(numedges(G), 1);
+end
 
 % optimize traffic flow
 
 
 
-for i = 1:length(rooms)-1
-    from = rooms;
-    to = 
-end
-
 traffic( traffic == 0 ) = 1;
 
-G.Edges.Weight = G.Edges.Weight .* traffic;
+% G.Edges.Weight = G.Edges.Weight .* traffic;
 
 p = plot(G, 'EdgeLabel', G.Edges.Weight, 'LineWidth', G.Edges.Weight./8);
