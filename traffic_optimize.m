@@ -4,7 +4,8 @@ adj_mat(isnan(adj_mat)) = 0;
 
 rooms = [17, 18, 35, 36, 38, 39];
 
-G = graph(adj_mat, labels);
+% G = graph(adj_mat, labels);
+G = graph(adj_mat);
 
 global traffic;
 traffic = zeros(numedges(G), 1);
@@ -33,6 +34,13 @@ for i = 1:size(combinations, 1)
     traffic = zeros(numedges(G), 1);
 end
 
-traffic( traffic == 0 ) = 1;
+[v, ind] = min(scores);
+min_rooms = combinations(ind, :);
+G.Edges.Weight(min_rooms) = G.Edges.Weight(min_rooms) * 10;
 
-p = plot(G, 'EdgeLabel', G.Edges.Weight, 'LineWidth', G.Edges.Weight./8);
+diff_rooms = setdiff(rooms, min_rooms);
+G.Edges.Weight(diff_rooms) = G.Edges.Weight(diff_rooms) * 10;
+
+% traffic( traffic == 0 ) = 1;
+
+p = plot(G, 'LineWidth', G.Edges.Weight./5);
